@@ -1,32 +1,30 @@
 package com.wangzai.library
 
 import android.content.Context
-import android.view.Gravity
-import android.view.View
 import android.view.WindowManager
 import com.wangzai.library.view.FloatView
 
 class FloatWindow(context: Context) {
-    private val windowManager: WindowManager =
-        context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
-    private var layoutParams: WindowManager.LayoutParams = WindowManager.LayoutParams()
+    companion object {
+        @Volatile
+        private var instance: FloatWindow? = null
 
-    init {
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-            layoutParams.type = WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY
-        } else {
-            layoutParams.type = WindowManager.LayoutParams.TYPE_SYSTEM_ALERT
+        fun getInstance(context: Context) = instance ?: synchronized(this) {
+            instance ?: FloatWindow(context.applicationContext).also { instance = it }
         }
-
-        layoutParams.flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
-        layoutParams.gravity = Gravity.START or Gravity.TOP
-        layoutParams.width = WindowManager.LayoutParams.WRAP_CONTENT
-        layoutParams.height = WindowManager.LayoutParams.WRAP_CONTENT
     }
 
+    private var windowManager: WindowManager =
+        context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
+    var floatView: FloatView? = null
+
     fun bindView(view: FloatView) {
-//        view.windowManager = windowManager
-//        view.layoutParams = layoutParams
-//        windowManager.addView(view, layoutParams)
+        this.floatView = view
+        floatView?.addWindow(windowManager)
+    }
+
+    fun removeView() {
+        floatView?.remove()
+        floatView = null
     }
 }

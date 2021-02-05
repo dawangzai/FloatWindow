@@ -1,6 +1,7 @@
 package com.wangzai.library.view
 
 import android.content.Context
+import android.graphics.PixelFormat
 import android.util.DisplayMetrics
 import android.view.*
 import android.widget.FrameLayout
@@ -19,8 +20,7 @@ class FloatView(context: Context) : FrameLayout(context) {
     private var maxOffsetY = 0
     private var offsetX: Int = minOffsetX
     private var offsetY: Int = minOffsetY
-    private var windowManager: WindowManager =
-        context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
+    private var windowManager: WindowManager? = null
     private var layoutParams: WindowManager.LayoutParams = WindowManager.LayoutParams()
     private val displayMetrics: DisplayMetrics = context.resources.displayMetrics
     private val gestureListener = GestureListener()
@@ -35,6 +35,7 @@ class FloatView(context: Context) : FrameLayout(context) {
             layoutParams.type = WindowManager.LayoutParams.TYPE_SYSTEM_ALERT
         }
 
+        layoutParams.format = PixelFormat.TRANSPARENT
         layoutParams.flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
         layoutParams.gravity = Gravity.START or Gravity.TOP
         layoutParams.width = WindowManager.LayoutParams.WRAP_CONTENT
@@ -42,8 +43,21 @@ class FloatView(context: Context) : FrameLayout(context) {
     }
 
     fun setAdapter(adapter: FloatViewAdapter) {
-        adapter.onBindView(adapter.onCreateView(LayoutInflater.from(context), this))
-        windowManager.addView(this, layoutParams)
+        removeAllViews()
+        adapter.onCreateView(LayoutInflater.from(context), this)
+        adapter.onBindView(this)
+    }
+
+    fun addWindow(windowManager: WindowManager) {
+        this.windowManager = windowManager
+        this.windowManager?.addView(this, layoutParams)
+    }
+
+    fun remove() {
+        if (isAttachedToWindow) {
+            windowManager?.removeView(this)
+            windowManager = null
+        }
     }
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
@@ -57,7 +71,7 @@ class FloatView(context: Context) : FrameLayout(context) {
                 val currentY = event.rawY
                 val dx = (currentX - lastX).toInt()
                 val dy = (currentY - lastY).toInt()
-                fixValue(dx, dy)
+                fixOffset(dx, dy)
                 move()
                 lastX = currentX
                 lastY = currentY
@@ -69,10 +83,10 @@ class FloatView(context: Context) : FrameLayout(context) {
     private fun move() {
         layoutParams.x = offsetX
         layoutParams.y = offsetY
-        windowManager.updateViewLayout(this, layoutParams)
+        windowManager?.updateViewLayout(this, layoutParams)
     }
 
-    private fun fixValue(dx: Int, dy: Int) {
+    private fun fixOffset(dx: Int, dy: Int) {
         val currentOffsetX = max(offsetX + dx, 0)
         val currentOffsetY = max(offsetY + dy, 0)
         maxOffsetX = if (maxOffsetX > 0) maxOffsetX else displayMetrics.widthPixels - width
@@ -83,6 +97,11 @@ class FloatView(context: Context) : FrameLayout(context) {
 
     inner class GestureListener : GestureDetector.SimpleOnGestureListener() {
         override fun onDown(e: MotionEvent?): Boolean {
+            return true
+        }
+
+        override fun onSingleTapConfirmed(e: MotionEvent?): Boolean {
+            performClick()
             return true
         }
 
@@ -118,7 +137,6 @@ class FloatView(context: Context) : FrameLayout(context) {
                 postOnAnimation(this)
             }
         }
-
     }
 
     abstract class FloatViewAdapter {
