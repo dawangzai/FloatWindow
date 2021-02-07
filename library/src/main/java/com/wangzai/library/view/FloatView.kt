@@ -34,7 +34,6 @@ class FloatView(context: Context) : FrameLayout(context) {
         } else {
             layoutParams.type = WindowManager.LayoutParams.TYPE_SYSTEM_ALERT
         }
-
         layoutParams.format = PixelFormat.TRANSPARENT
         layoutParams.flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
         layoutParams.gravity = Gravity.START or Gravity.TOP
@@ -87,6 +86,7 @@ class FloatView(context: Context) : FrameLayout(context) {
     }
 
     private fun fixOffset(dx: Int, dy: Int) {
+        // 控制偏移量  0<=offset<=displayMetrics.widthPixels - width
         val currentOffsetX = max(offsetX + dx, 0)
         val currentOffsetY = max(offsetY + dy, 0)
         maxOffsetX = if (maxOffsetX > 0) maxOffsetX else displayMetrics.widthPixels - width
@@ -99,6 +99,19 @@ class FloatView(context: Context) : FrameLayout(context) {
         override fun onDown(e: MotionEvent?): Boolean {
             return true
         }
+
+//        override fun onScroll(
+//            e1: MotionEvent?,
+//            e2: MotionEvent?,
+//            distanceX: Float,
+//            distanceY: Float
+//        ): Boolean {
+//            val dx = -distanceX.toInt()
+//            val dy = -distanceY.toInt()
+//            fixOffset(dx, dy)
+//            move()
+//            return true
+//        }
 
         override fun onSingleTapConfirmed(e: MotionEvent?): Boolean {
             performClick()
@@ -139,11 +152,10 @@ class FloatView(context: Context) : FrameLayout(context) {
         }
     }
 
-    abstract class FloatViewAdapter {
+    interface FloatViewAdapter {
 
-        abstract fun onCreateView(inflater: LayoutInflater, container: ViewGroup): View
+        fun onCreateView(inflater: LayoutInflater, container: ViewGroup): View
 
-        abstract fun onBindView(itemView: View)
-
+        fun onBindView(itemView: View)
     }
 }

@@ -7,7 +7,7 @@ import android.widget.ImageView
 import com.wangzai.library.FloatWindow
 import com.wangzai.library.view.FloatView
 
-class SimpleAdapter : FloatView.FloatViewAdapter() {
+class SimpleAdapter : FloatView.FloatViewAdapter {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup): View {
         return inflater.inflate(R.layout.layout_test, container)

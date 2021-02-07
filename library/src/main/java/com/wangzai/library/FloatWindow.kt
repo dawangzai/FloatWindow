@@ -16,7 +16,7 @@ class FloatWindow(context: Context) {
 
     private var windowManager: WindowManager =
         context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
-    var floatView: FloatView? = null
+    private var floatView: FloatView? = null
 
     fun bindView(view: FloatView) {
         this.floatView = view
