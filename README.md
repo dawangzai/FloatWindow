@@ -12,7 +12,7 @@
 	val floatView = FloatView(this).apply {
         setAdapter(SimpleAdapter())
     }
-    // 把 View 设置给 Window
+    // 创建 Window
     FloatWindow.getInstance(this).bindView(floatView)
     // 移除 Window
     FloatWindow.getInstance(this).removeView()
