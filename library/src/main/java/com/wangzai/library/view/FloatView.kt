@@ -14,11 +14,11 @@ class FloatView(context: Context) : FrameLayout(context) {
 
     private var lastX: Float = 0f
     private var lastY: Float = 0f
-    private var minOffsetX = 0
+    private var minOffsetX = 0 // 最小偏移量
     private var minOffsetY = 0
-    private var maxOffsetX = 0
+    private var maxOffsetX = 0 // 最大偏移量
     private var maxOffsetY = 0
-    private var offsetX: Int = minOffsetX
+    private var offsetX: Int = minOffsetX // 当前偏移量
     private var offsetY: Int = minOffsetY
     private var windowManager: WindowManager? = null
     private var layoutParams: WindowManager.LayoutParams = WindowManager.LayoutParams()
@@ -99,19 +99,6 @@ class FloatView(context: Context) : FrameLayout(context) {
         override fun onDown(e: MotionEvent?): Boolean {
             return true
         }
-
-//        override fun onScroll(
-//            e1: MotionEvent?,
-//            e2: MotionEvent?,
-//            distanceX: Float,
-//            distanceY: Float
-//        ): Boolean {
-//            val dx = -distanceX.toInt()
-//            val dy = -distanceY.toInt()
-//            fixOffset(dx, dy)
-//            move()
-//            return true
-//        }
 
         override fun onSingleTapConfirmed(e: MotionEvent?): Boolean {
             performClick()

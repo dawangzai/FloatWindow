@@ -33,7 +33,9 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
 
-    implementation 'com.tencent.liteav:LiteAVSDK_Professional:latest.release'
+//    implementation 'com.tencent.liteav:LiteAVSDK_Professional:latest.release'
+
+//    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.6'
 
     implementation project(":library")
 }
