@@ -1,5 +1,7 @@
 直播中悬浮小窗口实现方案。
 
+https://juejin.cn/post/6931133158230491143
+
 <img src="https://github.com/dawangzai/FloatWindow/blob/master/gif_1.gif" width=50%>
 
 ## 实现思路
